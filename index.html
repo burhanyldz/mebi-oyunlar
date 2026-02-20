@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEBİ - Bilişsel Beceri Oyunları</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ===== Scoped Widget Styles =====
+           All rules are scoped under .mebi-widget so nothing leaks
+           into the parent page's styles.
+        ===================================*/
+
+        /* --- CSS variables + base typography scoped to widget --- */
+        .mebi-widget {
+            font-family: 'Rubik', sans-serif;
+            line-height: 1.5;
+            font-weight: 400;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            color: var(--mw-text-primary);
+            background-color: var(--mw-bg);
+
+            /* Fundamentals - Primary */
+            --mw-primary-25: #dfe6f5;
+            --mw-primary-50: #b6c5e9;
+            --mw-primary-100: #92a8de;
+            --mw-primary-400-base: #0033b3;
+
+            /* Fundamentals - Secondary */
+            --mw-secondary-50: #f8fbff;
+            --mw-secondary-100: #f4f9ff;
+            --mw-secondary-400: #c8d0d9;
+            --mw-secondary-500: #b7bec6;
+
+            /* Drop Shadows */
+            --mw-shadow-sm: rgba(0, 51, 179, 0.1);
+            --mw-shadow-md: rgba(0, 51, 179, 0.16);
+
+            /* Background */
+            --mw-bg: #fdfeff;
+
+            /* Text */
+            --mw-text-primary: #3b3d3f;
+            --mw-text-secondary: #868b91;
+
+            /* Spacing */
+            --mw-space-s: 8px;
+            --mw-space-m: 12px;
+            --mw-space-l: 24px;
+        }
+
+        /* --- Dark mode: add class="mebi-widget dark" to the wrapper --- */
+        .mebi-widget.dark {
+            --mw-primary-25: #1e2a38;
+            --mw-primary-50: #223349;
+            --mw-primary-100: #263d5a;
+            --mw-primary-400-base: #4071c8;
+            --mw-secondary-50: #232323;
+            --mw-secondary-100: #2c2c2c;
+            --mw-secondary-400: #686868;
+            --mw-secondary-500: #747474;
+            --mw-shadow-sm: #4071c814;
+            --mw-shadow-md: #4071c81a;
+            --mw-bg: #1a1a1a;
+            --mw-text-primary: #d0d5dc;
+            --mw-text-secondary: #a3adb9;
+        }
+
+        /* --- Tablet --- */
+        @media (max-width: 1024px) {
+            .mebi-widget {
+                --mw-space-s: 6px;
+                --mw-space-m: 8px;
+                --mw-space-l: 16px;
+            }
+        }
+
+        /* --- Mobile --- */
+        @media (max-width: 640px) {
+            .mebi-widget {
+                --mw-space-s: 4px;
+                --mw-space-m: 8px;
+                --mw-space-l: 12px;
+            }
+        }
+
+        /* --- Scoped box-sizing reset (does NOT touch the parent page) --- */
+        .mebi-widget *, .mebi-widget *::before, .mebi-widget *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ===== Page Container ===== */
+        .mebi-widget .mw-page-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-bottom: 12px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        /* ===== Game Grid ===== */
+        .mebi-widget .mw-game-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            padding: 16px;
+        }
+
+        @media (max-width: 1024px) {
+            .mebi-widget .mw-game-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .mebi-widget .mw-game-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== Card ===== */
+        .mebi-widget .mw-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex-wrap: nowrap;
+            background-color: var(--mw-secondary-50);
+            border-radius: 18px;
+            border: 1px solid var(--mw-primary-25);
+            overflow: hidden;
+            position: relative;
+            padding: 0;
+            cursor: pointer;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .mebi-widget .mw-card:hover {
+            box-shadow: 0 10px 15px -3px var(--mw-shadow-md),
+                        0 4px 6px -4px var(--mw-shadow-sm);
+        }
+
+        /* ===== Card Image ===== */
+        .mebi-widget .mw-card-image {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #f3f4f6;
+            overflow: hidden;
+        }
+
+        .mebi-widget.dark .mw-card-image {
+            background-color: #374151;
+        }
+
+        .mebi-widget .mw-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* ===== Card Body ===== */
+        .mebi-widget .mw-card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 16px;
+            width: 100%;
+            flex: 1;
+        }
+
+        .mebi-widget .mw-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.4;
+            color: var(--mw-text-primary);
+            margin: 0;
+        }
+
+        .mebi-widget .mw-card-desc {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--mw-text-secondary);
+            margin: 0;
+        }
+
+        /* ===== Button ===== */
+        .mebi-widget .mw-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            border-radius: 8px;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            white-space: nowrap;
+            width: 100%;
+            margin-top: auto;
+            padding: 0 24px;
+            height: 36px;
+            font-size: 16px;
+            line-height: 24px;
+            background-color: #0033b3;
+            box-shadow: 0 4px 12px 0 #2450be inset;
+            color: #f5f5f5;
+        }
+
+        .mebi-widget .mw-btn:hover {
+            background-color: #002a99;
+        }
+    </style>
+</head>
+<body>
+    <div class="mebi-widget mw-page-container">
+        <div class="mw-game-grid" id="gameGrid">
+            <!-- Cards will be rendered by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Game data
+        const games = [
+            {
+                id: 0,
+                title: '2D Puzzle',
+                description: 'Mantıksal düşünme ve problem çözme becerilerinizi geliştirmek için tasarlanmış eğitici bulmacalar',
+                image: 'assets/2dpuzzle.png',
+                category: 'Mantık',
+                url: 'https://ogmmateryal.eba.gov.tr/oyun/2d-puzzle/gameindex.html'
+            }, 
+            {
+                id: 1,
+                title: 'Hafıza Arenası',
+                description: 'Kartları eşleştir ve hafızanı güçlendir.',
+                image: 'assets/game-cover-placeholder.png',
+                category: 'Hafıza'
+            },
+            {
+                id: 2,
+                title: 'Puzzle',
+                description: 'Parçaları birleştir, büyük resmi gör.',
+                image: 'assets/game-cover-placeholder.png',
+                category: 'Mantık'
+            },
+            {
+                id: 3,
+                title: 'Mantık Bulmacası',
+                description: 'Sıradaki şekli bul ve deseni tamamla.',
+                image: 'assets/game-cover-placeholder.png',
+                category: 'Problem Çözme'
+            },
+            {
+                id: 4,
+                title: 'Dikkat Testi',
+                description: 'Resimdeki gizli nesneleri bul.',
+                image: 'assets/game-cover-placeholder.png',
+                category: 'Dikkat'
+            },
+            {
+                id: 5,
+                title: 'Hız Serüveni',
+                description: 'Hedeflere en hızlı sen tıkla!',
+                image: 'assets/game-cover-placeholder.png',
+                category: 'Refleks'
+            },
+            {
+                id: 6,
+                title: 'Kelime Bulmaca',
+                description: 'Gizlenmiş kelimeleri bul.',
+                image: 'assets/game-cover-placeholder.png',
+                category: 'Dil Gelişimi'
+            },
+            {
+                id: 7,
+                title: 'Meyve Sudoku',
+                description: 'Meyveleri doğru yerlere yerleştir.',
+                image: 'assets/game-cover-placeholder.png',
+                category: 'Mantık'
+            },
+            {
+                id: 8,
+                title: 'Şekil Eşleştirme',
+                description: 'Şekilleri gölgeleriyle eşleştir.',
+                image: 'assets/game-cover-placeholder.png',
+                category: 'Görsel Algı'
+            },
+            {
+                id: 9,
+                title: 'Labirent',
+                description: 'Tavşanı havuca ulaştır.',
+                image: 'assets/game-cover-placeholder.png',
+                category: 'Problem Çözme'
+            },
+            {
+                id: 10,
+                title: 'Matematik Oyunu',
+                description: 'Eğlenceli işlemlerle matematiği sev.',
+                image: 'assets/game-cover-placeholder.png',
+                category: 'Sayısal'
+            },
+            {
+                id: 11,
+                title: 'Renk Ayrımı',
+                description: 'Topları renklerine göre kutulara at.',
+                image: 'assets/game-cover-placeholder.png',
+                category: 'Sınıflandırma'
+            },
+            {
+                id: 12,
+                title: 'Boyut Sıralama',
+                description: 'Çiçekleri küçükten büyüğe sırala.',
+                image: 'assets/game-cover-placeholder.png',
+                category: 'Sıralama'
+            }
+        ];
+
+        /**
+         * Creates a single game card HTML element.
+         * @param {Object} game
+         * @returns {HTMLElement}
+         */
+        function createGameCard(game) {
+            const card = document.createElement('div');
+            card.className = 'mw-card';
+            card.setAttribute('data-game-id', game.id);
+            if (game.url) {
+                card.setAttribute('data-url', game.url);
+            }
+
+            card.innerHTML = `
+                <div class="mw-card-image">
+                    <img src="${game.image}" alt="${game.title}" loading="lazy">
+                </div>
+                <div class="mw-card-body">
+                    <h3 class="mw-card-title">${game.title}</h3>
+                    <p class="mw-card-desc">${game.description}</p>
+                    <button class="mw-btn" data-game-id="${game.id}">
+                        Zihnini Harekete Geçir
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        /**
+         * Renders all game cards into the grid.
+         */
+        function renderGames() {
+            const grid = document.getElementById('gameGrid');
+            const fragment = document.createDocumentFragment();
+
+            games.forEach(function (game) {
+                fragment.appendChild(createGameCard(game));
+            });
+
+            grid.appendChild(fragment);
+        }
+
+        /**
+         * Handles play button clicks via event delegation.
+         */
+        function navigateToGame(game) {
+            if (game && game.url) {
+                // open in new tab
+                window.open(game.url, '_blank');
+            }
+        }
+
+        function initEventListeners() {
+            const grid = document.getElementById('gameGrid');
+
+            grid.addEventListener('click', function (e) {
+                // Button click — navigate if URL exists
+                const button = e.target.closest('button[data-game-id]');
+                if (button) {
+                    e.stopPropagation();
+                    const gameId = parseInt(button.getAttribute('data-game-id'), 10);
+                    const game = games.find(function (g) { return g.id === gameId; });
+                    navigateToGame(game);
+                    return;
+                }
+
+                // Card click — navigate if card has a URL
+                const card = e.target.closest('.mw-card[data-url]');
+                if (card) {
+                    const gameId = parseInt(card.getAttribute('data-game-id'), 10);
+                    const game = games.find(function (g) { return g.id === gameId; });
+                    navigateToGame(game);
+                }
+            });
+        }
+
+        // Initialize on DOM ready
+        document.addEventListener('DOMContentLoaded', function () {
+            renderGames();
+            initEventListeners();
+        });
+    </script>
+</body>
+</html>
