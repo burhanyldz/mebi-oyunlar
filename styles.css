@@ -1,0 +1,507 @@
+        /* ===== Scoped Widget Styles =====
+           All rules are scoped under .mebi-widget so nothing leaks
+           into the parent page's styles.
+        ===================================*/
+
+        /* --- CSS variables + base typography scoped to widget --- */
+        .mebi-widget {
+            font-family: 'Rubik', sans-serif;
+            line-height: 1.5;
+            font-weight: 400;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            color: var(--mw-text-primary);
+            background-color: var(--mw-bg);
+
+            /* Fundamentals - Primary */
+            --mw-primary-25: #dfe6f5;
+            --mw-primary-50: #b6c5e9;
+            --mw-primary-100: #92a8de;
+            --mw-primary-400-base: #0033b3;
+
+            /* Fundamentals - Secondary */
+            --mw-secondary-50: #f8fbff;
+            --mw-secondary-100: #f4f9ff;
+            --mw-secondary-400: #c8d0d9;
+            --mw-secondary-500: #b7bec6;
+
+            /* Drop Shadows */
+            --mw-shadow-sm: rgba(0, 51, 179, 0.1);
+            --mw-shadow-md: rgba(0, 51, 179, 0.16);
+
+            /* Background */
+            --mw-bg: #fdfeff;
+
+            /* Text */
+            --mw-text-primary: #3b3d3f;
+            --mw-text-secondary: #868b91;
+
+            /* Spacing */
+            --mw-space-s: 8px;
+            --mw-space-m: 12px;
+            --mw-space-l: 24px;
+        }
+
+        /* --- Dark mode: add class="mebi-widget dark" to the wrapper --- */
+        .mebi-widget.dark {
+            --mw-primary-25: #1e2a38;
+            --mw-primary-50: #223349;
+            --mw-primary-100: #263d5a;
+            --mw-primary-400-base: #4071c8;
+            --mw-secondary-50: #232323;
+            --mw-secondary-100: #2c2c2c;
+            --mw-secondary-400: #686868;
+            --mw-secondary-500: #747474;
+            --mw-shadow-sm: #4071c814;
+            --mw-shadow-md: #4071c81a;
+            --mw-bg: #1a1a1a;
+            --mw-text-primary: #d0d5dc;
+            --mw-text-secondary: #a3adb9;
+        }
+
+        /* --- Tablet --- */
+        @media (max-width: 1024px) {
+            .mebi-widget {
+                --mw-space-s: 6px;
+                --mw-space-m: 8px;
+                --mw-space-l: 16px;
+            }
+        }
+
+        /* --- Mobile --- */
+        @media (max-width: 640px) {
+            .mebi-widget {
+                --mw-space-s: 4px;
+                --mw-space-m: 8px;
+                --mw-space-l: 12px;
+            }
+        }
+
+        /* --- Scoped box-sizing reset (does NOT touch the parent page) --- */
+        .mebi-widget *, .mebi-widget *::before, .mebi-widget *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ===== Page Container ===== */
+        .mebi-widget .mw-page-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-bottom: 12px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        /* ===== Game Grid ===== */
+        .mebi-widget .mw-game-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            padding: 16px;
+        }
+
+        @media (max-width: 1024px) {
+            .mebi-widget .mw-game-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .mebi-widget .mw-game-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== Card ===== */
+        .mebi-widget .mw-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex-wrap: nowrap;
+            background-color: var(--mw-secondary-50);
+            border-radius: 18px;
+            border: 1px solid var(--mw-primary-25);
+            overflow: hidden;
+            position: relative;
+            padding: 0;
+            cursor: pointer;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .mebi-widget .mw-card:hover {
+            box-shadow: 0 10px 15px -3px var(--mw-shadow-md),
+                        0 4px 6px -4px var(--mw-shadow-sm);
+        }
+
+        /* ===== Card Image ===== */
+        .mebi-widget .mw-card-image {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #f3f4f6;
+            overflow: hidden;
+        }
+
+        .mebi-widget.dark .mw-card-image {
+            background-color: #374151;
+        }
+
+        .mebi-widget .mw-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* ===== Card Body ===== */
+        .mebi-widget .mw-card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 16px;
+            width: 100%;
+            flex: 1;
+        }
+
+        .mebi-widget .mw-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.4;
+            color: var(--mw-text-primary);
+            margin: 0;
+        }
+
+        .mebi-widget .mw-card-desc {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--mw-text-secondary);
+            margin: 0;
+        }
+
+        /* ===== Button ===== */
+        .mebi-widget .mw-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            border-radius: 8px;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            white-space: nowrap;
+            width: 100%;
+            margin-top: auto;
+            padding: 0 24px;
+            height: 36px;
+            font-size: 16px;
+            line-height: 24px;
+            background: linear-gradient(135deg, #0033b3 0%, #6d8ad4 100%);
+            box-shadow: 0px 2px 8px rgba(0, 51, 179, 0.3);
+            color: #f5f5f5;
+        }
+
+        .mebi-widget .mw-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0px 3px 10px rgba(0, 51, 179, 0.4);
+        }
+
+        .mebi-widget .mw-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ===== Shared Utility ===== */
+        .mebi-widget .mw-hidden {
+            display: none !important;
+        }
+
+        /* ===== Daily Usage ===== */
+        .mebi-widget .mw-usage-bar {
+            margin: 16px 16px 0;
+            padding: 12px 14px;
+            border: 1px solid #0284c7;
+            background: linear-gradient(90deg, #e0f2fe 0%, #f0f9ff 100%);
+            border-radius: 18px;
+            box-shadow: 0 6px 20px 0 rgba(0, 51, 179, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            color: #0369a1;
+            font-size: 15px;
+            line-height: 20px;
+        }
+
+        .mebi-widget .mw-usage-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mebi-widget .mw-usage-label {
+            color: #0369a1;
+            font-weight: 600;
+        }
+
+        .mebi-widget .mw-usage-time {
+            color: #0033b3;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .mebi-widget .mw-usage-separator {
+            color: #60a5fa;
+            font-size: 12px;
+        }
+
+        /* ===== Game Modal ===== */
+        .mebi-widget .mw-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            box-sizing: border-box;
+            padding-top: max(20px, env(safe-area-inset-top));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+        }
+
+        .mebi-widget .mw-modal-overlay.is-open {
+            display: flex;
+        }
+
+        .mebi-widget .mw-modal {
+            width: 100%;
+            max-width: 1000px;
+            height: min(90vh, calc(100dvh - 40px));
+            height: min(90vh, calc(100vh - 40px));
+            max-height: min(90vh, calc(100dvh - 40px));
+            min-height: min(90vh, calc(100dvh - 40px));
+            max-height: min(90vh, calc(100vh - 40px));
+            min-height: min(90vh, calc(100vh - 40px));
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid #b6c5e9;
+            background: #fdfeff;
+            box-shadow: 0 6px 20px 0 rgba(0, 51, 179, 0.2);
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            touch-action: manipulation;
+        }
+
+        .mebi-widget .mw-modal-header {
+            padding: 10px 24px 0 24px;
+            border-bottom: 1px solid #dfe6f5;
+            background: #fdfeff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .mebi-widget .mw-modal-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+            padding-bottom: 10px;
+        }
+
+        .mebi-widget .mw-modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0033b3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
+        }
+
+        .mebi-widget .mw-modal-remaining {
+            font-size: 13px;
+            color: #3b3d3f;
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .mebi-widget .mw-modal-close {
+            border: 1px solid #dfe6f5;
+            background: #f8fbff;
+            color: #3b3d3f;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 22px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .mebi-widget .mw-modal-close:hover {
+            background: #f4f9ff;
+            border-color: #b6c5e9;
+            transform: translateY(-1px);
+        }
+
+        .mebi-widget .mw-modal-body {
+            flex: 1;
+            min-height: 0;
+            background: #040308;
+        }
+
+        .mebi-widget .mw-modal-iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background: #040308;
+        }
+
+        /* ===== Toast ===== */
+        .mebi-widget .mw-toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 420px;
+            border: 1px solid #0284c7;
+            border-radius: 18px;
+            background: linear-gradient(90deg, #e0f2fe 0%, #f0f9ff 100%);
+            box-shadow: 0 6px 20px 0 rgba(0, 51, 179, 0.2);
+            display: none;
+            padding: 12px;
+            animation: mw-slide-in-right 0.3s ease-out;
+        }
+
+        .mebi-widget .mw-toast-notification.show {
+            display: flex;
+        }
+
+        .mebi-widget .mw-toast-notification.warning {
+            border-color: #ef4444;
+            background: linear-gradient(90deg, #fee2e2 0%, #fef2f2 100%);
+        }
+
+        .mebi-widget .mw-toast-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .mebi-widget .mw-toast-alert-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mebi-widget .mw-toast-icon {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .mebi-widget .mw-toast-text {
+            margin: 0;
+            color: #0284c7;
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+        .mebi-widget .mw-toast-notification.warning .mw-toast-text {
+            color: #b91c1c;
+        }
+
+        @keyframes mw-slide-in-right {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 1199px) {
+            .mebi-widget .mw-modal-overlay {
+                padding: 0;
+                padding-top: 0;
+                padding-bottom: 0;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .mebi-widget .mw-modal {
+                max-width: 100%;
+                width: 100%;
+                height: 100dvh;
+                height: 100vh;
+                max-height: 100dvh;
+                min-height: 100dvh;
+                max-height: 100vh;
+                min-height: 100vh;
+                border-radius: 0;
+                border: 0;
+                box-shadow: none;
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+                padding-left: env(safe-area-inset-left);
+                padding-right: env(safe-area-inset-right);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .mebi-widget .mw-usage-bar {
+                margin: 12px 12px 0;
+                padding: 10px 12px;
+                border-radius: 14px;
+            }
+
+            .mebi-widget .mw-game-grid {
+                padding: 12px;
+            }
+
+            .mebi-widget .mw-modal-header {
+                padding: 8px 12px;
+            }
+
+            .mebi-widget .mw-modal-title-wrap {
+                padding-bottom: 8px;
+            }
+
+            .mebi-widget .mw-modal-title {
+                font-size: 16px;
+            }
+
+            .mebi-widget .mw-toast-notification {
+                left: 12px;
+                right: 12px;
+                top: 12px;
+                max-width: none;
+            }
+
+            .mebi-widget .mw-toast-text {
+                font-size: 14px;
+                line-height: 20px;
+            }
+        }
