@@ -67,19 +67,9 @@
     </div>
 
     <script>
-        /*
-         * Optional runtime config:
-         * window.MebiOyunlarConfig = {
-         *   dailyLimitMinutes: 30,
-         *   showDailyLimit: true,
-         *   showRemainingTime: true,
-         *   theme: { toastIcon: 'https://...' }
-         * };
-         * URL param overrides are also supported:
-         * ?showDailyLimit=false&showRemainingTime=false&dailyLimitMinutes=20
-         */
+
         const DEFAULT_CONFIG = {
-            dailyLimitMinutes: 1,
+            dailyLimitMinutes: 30,
             showDailyLimit: true,
             showRemainingTime: true,
             toastIcon: 'https://ogm-small-cdn.eba.gov.tr/mebi/plugins/stay-fit/images/kanka.png'
@@ -110,23 +100,20 @@
             const display = (source.display && typeof source.display === 'object') ? source.display : {};
             const gameplay = (source.gameplay && typeof source.gameplay === 'object') ? source.gameplay : {};
             const theme = (source.theme && typeof source.theme === 'object') ? source.theme : {};
-            const queryParams = new URLSearchParams(window.location.search);
 
-            const dailyLimitMinutesRaw = queryParams.get('dailyLimitMinutes') !== null
-                ? queryParams.get('dailyLimitMinutes')
-                : (gameplay.dailyLimitMinutes !== undefined ? gameplay.dailyLimitMinutes : source.dailyLimitMinutes);
+            const dailyLimitMinutesRaw = gameplay.dailyLimitMinutes !== undefined
+                ? gameplay.dailyLimitMinutes
+                : source.dailyLimitMinutes;
             const parsedDailyLimit = Number(dailyLimitMinutesRaw);
-            const showDailyLimitRaw = queryParams.get('showDailyLimit') !== null
-                ? queryParams.get('showDailyLimit')
-                : (display.showDailyLimit !== undefined ? display.showDailyLimit : source.showDailyLimit);
-            const showRemainingTimeRaw = queryParams.get('showRemainingTime') !== null
-                ? queryParams.get('showRemainingTime')
-                : (display.showRemainingTime !== undefined ? display.showRemainingTime : source.showRemainingTime);
-            const toastIconRaw = queryParams.get('toastIcon') !== null
-                ? queryParams.get('toastIcon')
-                : ((typeof theme.toastIcon === 'string' && theme.toastIcon.trim())
-                    ? theme.toastIcon.trim()
-                    : source.toastIcon);
+            const showDailyLimitRaw = display.showDailyLimit !== undefined
+                ? display.showDailyLimit
+                : source.showDailyLimit;
+            const showRemainingTimeRaw = display.showRemainingTime !== undefined
+                ? display.showRemainingTime
+                : source.showRemainingTime;
+            const toastIconRaw = (typeof theme.toastIcon === 'string' && theme.toastIcon.trim())
+                ? theme.toastIcon.trim()
+                : source.toastIcon;
 
             return {
                 dailyLimitMinutes: (Number.isFinite(parsedDailyLimit) && parsedDailyLimit > 0)
