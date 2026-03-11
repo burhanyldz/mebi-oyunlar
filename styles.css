@@ -266,15 +266,11 @@
             inset: 0;
             z-index: 9999;
             display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            justify-content: stretch;
+            align-items: stretch;
+            padding: 0;
             background: rgba(0, 0, 0, 0.5);
             box-sizing: border-box;
-            padding-top: max(20px, env(safe-area-inset-top));
-            padding-bottom: max(20px, env(safe-area-inset-bottom));
-            padding-left: max(20px, env(safe-area-inset-left));
-            padding-right: max(20px, env(safe-area-inset-right));
         }
 
         .mebi-widget .mw-modal-overlay.is-open {
@@ -282,25 +278,29 @@
         }
 
         .mebi-widget .mw-modal {
-            width: 100%;
-            max-width: 1000px;
-            height: min(90vh, calc(100dvh - 40px));
-            height: min(90vh, calc(100vh - 40px));
-            max-height: min(90vh, calc(100dvh - 40px));
-            min-height: min(90vh, calc(100dvh - 40px));
-            max-height: min(90vh, calc(100vh - 40px));
-            min-height: min(90vh, calc(100vh - 40px));
-            border-radius: 18px;
+            width: 100vw;
+            max-width: 100vw;
+            height: 100dvh;
+            height: 100vh;
+            max-height: 100dvh;
+            min-height: 100dvh;
+            max-height: 100vh;
+            min-height: 100vh;
+            border-radius: 0;
             overflow: hidden;
-            border: 1px solid #b6c5e9;
+            border: 0;
             background: #fdfeff;
-            box-shadow: 0 6px 20px 0 rgba(0, 51, 179, 0.2);
+            box-shadow: none;
             display: flex;
             flex-direction: column;
             user-select: none;
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: contain;
             touch-action: manipulation;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
         }
 
         .mebi-widget .mw-modal-header {
@@ -339,7 +339,14 @@
             font-variant-numeric: tabular-nums;
         }
 
-        .mebi-widget .mw-modal-close {
+        .mebi-widget .mw-modal-controls {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 10px;
+        }
+
+        .mebi-widget .mw-modal-control-btn {
             border: 1px solid #dfe6f5;
             background: #f8fbff;
             color: #3b3d3f;
@@ -355,10 +362,44 @@
             transition: all 0.2s ease;
         }
 
-        .mebi-widget .mw-modal-close:hover {
+        .mebi-widget .mw-modal-control-btn:hover {
             background: #f4f9ff;
             border-color: #b6c5e9;
             transform: translateY(-1px);
+        }
+
+        .mebi-widget .mw-modal-control-btn:focus-visible {
+            outline: 2px solid #60a5fa;
+            outline-offset: 2px;
+        }
+
+        .mebi-widget .mw-modal-close {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .mebi-widget .mw-close-icon {
+            width: 18px;
+            height: 18px;
+            display: block;
+        }
+
+        .mebi-widget .mw-fullscreen-icon {
+            width: 16px;
+            height: 16px;
+            display: block;
+        }
+
+        .mebi-widget .mw-fullscreen-icon-exit {
+            display: none;
+        }
+
+        .mebi-widget .mw-modal-fullscreen.is-active .mw-fullscreen-icon-enter {
+            display: none;
+        }
+
+        .mebi-widget .mw-modal-fullscreen.is-active .mw-fullscreen-icon-exit {
+            display: block;
         }
 
         .mebi-widget .mw-modal-body {
@@ -442,34 +483,6 @@
             }
         }
 
-        @media (max-width: 1199px) {
-            .mebi-widget .mw-modal-overlay {
-                padding: 0;
-                padding-top: 0;
-                padding-bottom: 0;
-                padding-left: 0;
-                padding-right: 0;
-            }
-
-            .mebi-widget .mw-modal {
-                max-width: 100%;
-                width: 100%;
-                height: 100dvh;
-                height: 100vh;
-                max-height: 100dvh;
-                min-height: 100dvh;
-                max-height: 100vh;
-                min-height: 100vh;
-                border-radius: 0;
-                border: 0;
-                box-shadow: none;
-                padding-top: env(safe-area-inset-top);
-                padding-bottom: env(safe-area-inset-bottom);
-                padding-left: env(safe-area-inset-left);
-                padding-right: env(safe-area-inset-right);
-            }
-        }
-
         @media (max-width: 640px) {
             .mebi-widget .mw-usage-bar {
                 margin: 12px 12px 0;
@@ -486,6 +499,10 @@
             }
 
             .mebi-widget .mw-modal-title-wrap {
+                padding-bottom: 8px;
+            }
+
+            .mebi-widget .mw-modal-controls {
                 padding-bottom: 8px;
             }
 

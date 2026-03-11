@@ -30,13 +30,33 @@
         </div>
 
         <div class="mw-modal-overlay" id="gameModalOverlay" aria-hidden="true">
-            <div class="mw-modal" role="dialog" aria-modal="true" aria-labelledby="gameModalTitle">
+            <div class="mw-modal" id="gameModal" role="dialog" aria-modal="true" aria-labelledby="gameModalTitle">
                 <div class="mw-modal-header">
                     <div class="mw-modal-title-wrap">
                         <h2 class="mw-modal-title" id="gameModalTitle">Oyun</h2>
                         <p class="mw-modal-remaining" id="gameModalRemaining">Kalan süre: --</p>
                     </div>
-                    <button class="mw-modal-close" id="gameModalCloseBtn" aria-label="Oyunu kapat" type="button">&times;</button>
+                    <div class="mw-modal-controls">
+                        <button
+                            class="mw-modal-control-btn mw-modal-fullscreen"
+                            id="gameModalFullscreenBtn"
+                            aria-label="Tam ekran"
+                            title="Tam ekran"
+                            type="button"
+                        >
+                            <svg class="mw-fullscreen-icon mw-fullscreen-icon-enter" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                                <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5M.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5"/>
+                            </svg>
+                            <svg class="mw-fullscreen-icon mw-fullscreen-icon-exit" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                                <path d="M5.5 0a.5.5 0 0 1 .5.5v4A1.5 1.5 0 0 1 4.5 6h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5m5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 10 4.5v-4a.5.5 0 0 1 .5-.5M0 10.5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 6 11.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5m10 1a1.5 1.5 0 0 1 1.5-1.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0z"/>
+                            </svg>
+                        </button>
+                        <button class="mw-modal-control-btn mw-modal-close" id="gameModalCloseBtn" aria-label="Oyunu kapat" type="button">
+                            <svg class="mw-close-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
                 <div class="mw-modal-body">
                     <iframe
@@ -151,7 +171,9 @@
 
         const ui = {
             overlay: null,
+            modal: null,
             closeButton: null,
+            fullscreenButton: null,
             modalTitle: null,
             modalRemaining: null,
             iframe: null,
@@ -348,15 +370,92 @@
             updateRemainingUI();
         }
 
+        function getFullscreenElement() {
+            return document.fullscreenElement || document.webkitFullscreenElement || null;
+        }
+
+        function requestElementFullscreen(element) {
+            if (!element) {
+                return null;
+            }
+
+            if (typeof element.requestFullscreen === 'function') {
+                return element.requestFullscreen();
+            }
+
+            if (typeof element.webkitRequestFullscreen === 'function') {
+                return element.webkitRequestFullscreen();
+            }
+
+            return null;
+        }
+
+        function exitDocumentFullscreen() {
+            if (typeof document.exitFullscreen === 'function') {
+                return document.exitFullscreen();
+            }
+
+            if (typeof document.webkitExitFullscreen === 'function') {
+                return document.webkitExitFullscreen();
+            }
+
+            return null;
+        }
+
+        function updateFullscreenButtonState() {
+            if (!ui.fullscreenButton) {
+                return;
+            }
+
+            const isFullscreen = Boolean(getFullscreenElement());
+            const label = isFullscreen ? 'Tam ekrandan çık' : 'Tam ekran';
+            ui.fullscreenButton.classList.toggle('is-active', isFullscreen);
+            ui.fullscreenButton.setAttribute('aria-label', label);
+            ui.fullscreenButton.setAttribute('title', label);
+        }
+
+        function toggleModalFullscreen() {
+            if (!ui.modal) {
+                return;
+            }
+
+            if (getFullscreenElement()) {
+                const exitResult = exitDocumentFullscreen();
+                if (exitResult && typeof exitResult.catch === 'function') {
+                    exitResult.catch(function () {
+                        // Ignore fullscreen exit failures for unsupported contexts.
+                    });
+                }
+                return;
+            }
+
+            const enterResult = requestElementFullscreen(ui.modal);
+            if (enterResult && typeof enterResult.catch === 'function') {
+                enterResult.catch(function () {
+                    // Ignore fullscreen failures (e.g. blocked by browser policy).
+                });
+            }
+        }
+
         function closeGameModal(limitReached) {
             if (!ui.overlay.classList.contains('is-open')) {
                 return;
             }
 
             stopSessionTimer();
+            if (getFullscreenElement()) {
+                const exitResult = exitDocumentFullscreen();
+                if (exitResult && typeof exitResult.catch === 'function') {
+                    exitResult.catch(function () {
+                        // Ignore fullscreen exit failures; modal still closes.
+                    });
+                }
+            }
+
             ui.overlay.classList.remove('is-open');
             ui.overlay.setAttribute('aria-hidden', 'true');
             ui.iframe.src = 'about:blank';
+            updateFullscreenButtonState();
 
             if (limitReached) {
                 showToast('Günlük oyun süreniz doldu. Yarın tekrar deneyebilirsiniz.', 'warning');
@@ -378,6 +477,7 @@
             ui.iframe.src = game.url;
             ui.overlay.classList.add('is-open');
             ui.overlay.setAttribute('aria-hidden', 'false');
+            updateFullscreenButtonState();
             startSessionTimer();
             updateRemainingUI();
         }
@@ -553,6 +653,12 @@
                 closeGameModal(false);
             });
 
+            if (ui.fullscreenButton) {
+                ui.fullscreenButton.addEventListener('click', function () {
+                    toggleModalFullscreen();
+                });
+            }
+
             ui.overlay.addEventListener('click', function (event) {
                 if (event.target === ui.overlay) {
                     closeGameModal(false);
@@ -561,9 +667,16 @@
 
             document.addEventListener('keydown', function (event) {
                 if (event.key === 'Escape' && ui.overlay.classList.contains('is-open')) {
+                    if (getFullscreenElement()) {
+                        return;
+                    }
+
                     closeGameModal(false);
                 }
             });
+
+            document.addEventListener('fullscreenchange', updateFullscreenButtonState);
+            document.addEventListener('webkitfullscreenchange', updateFullscreenButtonState);
 
             window.addEventListener('beforeunload', function () {
                 stopSessionTimer();
@@ -573,7 +686,9 @@
         // Initialize on DOM ready
         document.addEventListener('DOMContentLoaded', function () {
             ui.overlay = document.getElementById('gameModalOverlay');
+            ui.modal = document.getElementById('gameModal');
             ui.closeButton = document.getElementById('gameModalCloseBtn');
+            ui.fullscreenButton = document.getElementById('gameModalFullscreenBtn');
             ui.modalTitle = document.getElementById('gameModalTitle');
             ui.modalRemaining = document.getElementById('gameModalRemaining');
             ui.iframe = document.getElementById('gameIframe');
@@ -587,11 +702,22 @@
             ui.dailyLimit = document.getElementById('mwDailyLimit');
             ui.remainingBadge = document.getElementById('mwRemainingTimeBadge');
 
+            const canUseFullscreen = Boolean(
+                ui.modal &&
+                (typeof ui.modal.requestFullscreen === 'function' || typeof ui.modal.webkitRequestFullscreen === 'function') &&
+                (typeof document.exitFullscreen === 'function' || typeof document.webkitExitFullscreen === 'function')
+            );
+
+            if (ui.fullscreenButton && !canUseFullscreen) {
+                ui.fullscreenButton.classList.add('mw-hidden');
+            }
+
             applyDisplayConfig();
             updateRemainingUI();
             renderGames();
             initEventListeners();
             initModalListeners();
+            updateFullscreenButtonState();
         });
     </script>
 </body>
